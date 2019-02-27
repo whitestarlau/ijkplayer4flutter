@@ -1,10 +1,5 @@
 # ijkplayer4flutter
 
-A new flutter plugin project.
-
-## Getting Started
-
-For help getting started with Flutter, view our online
-[documentation](https://flutter.io/).
-
-For help on editing plugin code, view the [documentation](https://flutter.io/developing-packages/#edit-plugin-package).
+这是一个flutter的Ijkplayer插件。借鉴了官方视频插件video_player。
+此项目还在相当初期的阶段，目前只能在Android平台正常运行，iOS平台暂时无法正常使用。
+因为作者对iOS平台不甚熟悉，对flutter开发经验也甚少，欢迎相关的开发者提出意见。
