@@ -1,0 +1,7 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.example.ijkplayer4flutter">
+
+    <!--arm64 support for ijkplayer and compatible api<21 devices at the same time-->
+    <uses-sdk tools:overrideLibrary="tv.danmaku.ijk.media.player_arm64"/>
+</manifest>

@@ -1,0 +1,59 @@
+group 'com.example.ijkplayer4flutter'
+version '1.0-SNAPSHOT'
+
+buildscript {
+    repositories {
+        google()
+        jcenter()
+    }
+
+    dependencies {
+        classpath 'com.android.tools.build:gradle:3.2.1'
+    }
+}
+
+rootProject.allprojects {
+    repositories {
+        google()
+        jcenter()
+    }
+}
+
+
+
+apply plugin: 'com.android.library'
+
+android {
+    compileSdkVersion 28
+
+    defaultConfig {
+        minSdkVersion 16
+        targetSdkVersion 28
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+//        ndk {
+//            abiFilters  "armeabi-v8a"
+//        }
+
+    }
+    lintOptions {
+        disable 'InvalidPackage'
+    }
+
+    dependencies {
+//        # required, enough for most devices.
+        implementation 'tv.danmaku.ijk.media:ijkplayer-java:0.8.8'
+        implementation 'tv.danmaku.ijk.media:ijkplayer-armv7a:0.8.8'
+//        # Other ABIs: optional
+        implementation 'tv.danmaku.ijk.media:ijkplayer-armv5:0.8.8'
+        implementation 'tv.danmaku.ijk.media:ijkplayer-arm64:0.8.8'
+
+//        implementation 'com.android.support:multidex:1.0.3'
+
+        implementation 'com.android.support:appcompat-v7:28.0.0'
+        implementation 'com.android.support:preference-v7:28.0.0'
+        implementation 'com.android.support:support-annotations:28.0.0'
+
+        implementation 'com.squareup:otto:1.3.8'
+    }
+}
