@@ -66,8 +66,8 @@ class _PlayerDemoState extends State<PlayerDemo> {
     _controller = new Controller();
 
     _ijkPlayer = IjkPlayer(dataSource);
-    _controller.bind(_ijkPlayer);
-
+    _controller.bindPlayer(_ijkPlayer);
+    _controller.bind(this);
   }
 
   @override
@@ -77,11 +77,12 @@ class _PlayerDemoState extends State<PlayerDemo> {
     super.dispose();
   }
 
-  void _rotate(){
+  void rotate(){
     setState(() {
       _full = !_full;
     });
     if (Platform.isAndroid) {
+      //设置全屏,隐藏状态栏和虚拟按键
       if(_full){
         SystemChrome.setEnabledSystemUIOverlays([]);
       }else{
@@ -96,15 +97,27 @@ class _PlayerDemoState extends State<PlayerDemo> {
     _screenSize =MediaQuery.of(context).size;
 
     return new Scaffold(
-//      appBar: new AppBar(
-//        title: new Text('ijkplayer'),
+      //多种在全屏模式下隐藏appbar的方式，均不太完美
+//      appBar: PreferredSize(
+//        preferredSize: new Size(_screenSize.width, _full?0:50),
+//        child: Offstage(
+//            offstage: _full,
+//            child: AppBar(
+//              centerTitle:true,
+//            )
+//        )
 //      ),
-
-      floatingActionButton: FloatingActionButton(
-        onPressed: _rotate,
-        tooltip: 'Increment',
-        child: Icon(Icons.add),
-      ),
+//      appBar: PreferredSize(
+//          preferredSize: new Size(_screenSize.width, _full?0:50),
+//          child: new AnimatedOpacity(// 使用一个AnimatedOpacity Widget
+//              opacity: _full?1.0:0,
+//              duration: new Duration(seconds: 1),//过渡时间：1
+//              child:new AppBar(
+//                centerTitle: true,
+//
+//              )
+//          ),
+//      ),
       body: _buildBody(),
     );
   }
@@ -124,8 +137,13 @@ class _PlayerDemoState extends State<PlayerDemo> {
       height = width*9/16;
     }
 
+    if(_full){
+
+    }else{
+
+    }
     return RotatedBox(
-      quarterTurns: rotate, //旋转90度(1/4圈)
+      quarterTurns: rotate,
       child: new Stack(
           alignment:Alignment.centerLeft,
           children: <Widget>[
@@ -172,8 +190,19 @@ class _PlayerDemoState extends State<PlayerDemo> {
 
 class Controller{
   IjkPlayer ijkPlayer;
+  _PlayerDemoState demo;
 
-  bind(IjkPlayer ijkPlayer){
+  bind(_PlayerDemoState demo){
+    this.demo = demo;
+  }
+
+  rotate(){
+    if(demo != null){
+      demo.rotate();
+    }
+  }
+
+  bindPlayer(IjkPlayer ijkPlayer){
     this.ijkPlayer = ijkPlayer;
   }
 
@@ -347,7 +376,10 @@ class _VideoBottomBarState extends State<VideoBottomBar> {
           flex: 1,
           child: FlatButton(
             child: Image.asset("image/ic_fullscreen.png",height: 20,width: 20,),
-            onPressed: () =>{
+            onPressed: (){
+              setState(() {
+                _controller.rotate();
+              });
             },
           ),
         ),
