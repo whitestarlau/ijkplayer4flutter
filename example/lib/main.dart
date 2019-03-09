@@ -11,6 +11,9 @@ import 'package:ijkplayer4flutter/ijkplayer4flutter.dart';
 
 import 'package:flutter/rendering.dart';
 
+import 'dart:io';
+import 'package:flutter/services.dart';
+
 void main() {
 //  debugPaintSizeEnabled = true;
 
@@ -18,16 +21,9 @@ void main() {
   final String url2 = "http://devimages.apple.com.edgekey.net/streaming/examples/bipbop_4x3/bipbop_4x3_variant.m3u8";
   final String url3 = "http://qukufile2.qianqian.com/data2/video/f0b3f865a41736655ae535c3e2432f22/608007995/608007995.mp4";
 
-//  runApp(
-//    new MaterialApp(
-//      title: 'Flutter教程',
-//      home: test(),
-//    ),
-//  );
-
   runApp(
     new MaterialApp(
-      title: 'Flutter教程',
+      title: 'ijkplayer4flutter',
       home: PlayerDemo(url1),
     ),
   );
@@ -58,6 +54,9 @@ class _PlayerDemoState extends State<PlayerDemo> {
 
   _PlayerDemoState(this.dataSource) : dataSourceType = DataSourceType.network;
 
+  Size _screenSize;
+  bool _full = false;
+
   @override
   void initState() {
     super.initState();
@@ -77,22 +76,62 @@ class _PlayerDemoState extends State<PlayerDemo> {
 
     super.dispose();
   }
+
+  void _rotate(){
+    setState(() {
+      _full = !_full;
+    });
+    if (Platform.isAndroid) {
+      if(_full){
+        SystemChrome.setEnabledSystemUIOverlays([]);
+      }else{
+        SystemChrome.setEnabledSystemUIOverlays(SystemUiOverlay.values);
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
 
-    Size screenSize=MediaQuery.of(context).size;
+    _screenSize =MediaQuery.of(context).size;
 
     return new Scaffold(
 //      appBar: new AppBar(
 //        title: new Text('ijkplayer'),
 //      ),
 
-      body: new Stack(
+      floatingActionButton: FloatingActionButton(
+        onPressed: _rotate,
+        tooltip: 'Increment',
+        child: Icon(Icons.add),
+      ),
+      body: _buildBody(),
+    );
+  }
+
+  Widget _buildBody(){
+    int rotate = 0;
+    double width;
+    double height;
+    if(_full){
+      rotate = 1;
+      width = _screenSize.height;
+       height = _screenSize.width;
+    }else{
+      rotate = 0;
+      width = _screenSize.width;
+//      height = _screenSize.height;
+      height = width*9/16;
+    }
+
+    return RotatedBox(
+      quarterTurns: rotate, //旋转90度(1/4圈)
+      child: new Stack(
           alignment:Alignment.centerLeft,
           children: <Widget>[
             Container(
-              height: 240,
-              width: screenSize.width,
+              height: height,
+              width: width,
               child: GestureDetector(
                 onTap:(){
                   setState(() {
@@ -106,7 +145,7 @@ class _PlayerDemoState extends State<PlayerDemo> {
               bottom : 0.0,
               child: Container(
                 height: 50,
-                width: screenSize.width,
+                width: width,
                 child: Offstage(
                   offstage: isBarVisiable,
                   child: VideoBottomBar(_controller),
@@ -117,7 +156,7 @@ class _PlayerDemoState extends State<PlayerDemo> {
               top: 0.0,
               child: Container(
                 height: 50,
-                width: screenSize.width,
+                width: width,
                 child: Offstage(
                   offstage: isBarVisiable,
                   child: VideoTopBar(),
@@ -128,6 +167,7 @@ class _PlayerDemoState extends State<PlayerDemo> {
       ),
     );
   }
+
 }
 
 class Controller{
